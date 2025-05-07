@@ -21,13 +21,6 @@ public class StudentDAO {
 	// INSERT
 	public int insertStudent(Student student) throws SQLException {
 
-		// Find By Email
-		Student existingStudent = findStudentByEmail(student.getEmail());
-
-		if (existingStudent != null) {
-			return -1;
-		}
-
 		// create sql statement
 		String insertSql = "insert into student (first_name, last_name, email, phone) values (?, ?, ?, ?)";
 
@@ -97,8 +90,7 @@ public class StudentDAO {
 		closeAll(connection, ps, null);
 		return result;
 	}
-	
-	
+
 	// UPDATE
 //		public int updateStudent(Student updatedStudent, int rollNo) throws SQLException {
 //
@@ -124,7 +116,6 @@ public class StudentDAO {
 //
 //			return result;
 //		}
-	
 
 	private void closeAll(Connection conn, PreparedStatement ps, ResultSet rs) throws SQLException {
 
@@ -159,6 +150,27 @@ public class StudentDAO {
 		closeAll(connection, ps, rs);
 
 		return student;
+	}
+
+	public int updateStudent(Student student) throws SQLException {
+
+		// create sql statement
+		String updateSql = "update student set first_name = ?, last_name = ?, email = ?, phone = ? where roll_no = ?";
+
+		PreparedStatement ps = connection.prepareStatement(updateSql);
+		ps.setString(1, student.getFirstName());
+		ps.setString(2, student.getLastName());
+		ps.setString(3, student.getEmail());
+		ps.setString(4, student.getPhone());
+		ps.setInt(5, student.getRollNo());
+		
+		int result = ps.executeUpdate();
+
+		// CLOSE
+		closeAll(connection, ps, null);
+
+		return result;
+
 	}
 
 }
